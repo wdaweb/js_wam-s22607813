@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja_fighting</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #content {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+
+        }
+
+        #start-page {
+            height: 100%;
+            width: 100%;
+            background: url(./images/index_3.png) no-repeat center center/cover;
+            position: absolute;
+            z-index: 1;
+
+        }
+
+        #start-page #start {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 60%;
+        }
+
+        #start-page #rule {
+            display: inline-block;
+            position: absolute;
+            top: 70%;
+            left: 60%;
+        }
+
+        #start-page #start:hover {
+            transform: rotate(10deg);
+        }
+
+        #start-page #rule:hover {
+            transform: rotate(10deg);
+        }
+
+        #header {
+            width: 100%;
+            height: 5%;
+            background: url(./images/footer.png)repeat-x top left;
+            position: absolute;
+            text-align: center;
+            font-size: 1rem;
+            font-family: "微軟正黑體";
+            font-weight: bolder;
+            color: white;
+            text-shadow:
+                1px 1px 1px #000,
+                3px 3px 5px rgb(151, 151, 151),
+                5px 5px 3px #000;
+            line-height: 32px;
+        }
+
+
+        .ninjas {
+            width: 150px;
+            height: 150px;
+            background: url(./images/door-2.jpg);
+            padding: 0;
+        }
+
+        #main {
+            width: 100%;
+            height: 90%;
+            background: url(./images/background_3.jpg) no-repeat center center/contain;
+            margin: auto;
+            top: 5%;
+            position: absolute;
+            box-shadow: 0px 0px 25px 5px rgba(0, 0, 0, 0.67);
+        }
+
+        #footer {
+            width: 100%;
+            height: 5%;
+            background: url(./images/footer.png)repeat-x top left;
+            position: absolute;
+            top: 95%;
+        }
+
+        #table {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* position: absolute;
+            top: 50%;
+            transform: translateY(-50%); */
+        }
+
+        #table table tr td {
+            cursor: url(./images/cursor-2.png)25 25, auto;
+        }
+
+        .enemy {
+            background: url(./images/enemy-1.jpg);
+        }
+
+        .ghost {
+            background: url(./images/ghost-3.jpg);
+        }
+
+        .ghost-2 {
+            background: url(./images/ghost-4.jpg);
+        }
+
+        .princess {
+            background: url(./images/princess-2.jpg);
+        }
+
+        #clear {
+            width: 450px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #fail {
+            width: 450px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .display {
+            display: none;
+        }
+
+        #rule-page {
+            height: 80%;
+            width: 80%;
+            background: url(./images/rule_1.png)no-repeat center center/cover;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            display: auto;
+            border: 5px solid black;
+        }
+
+        #close {
+            position: absolute;
+            height: 50px;
+            width: 50px;
+            top: -25px;
+            right: -25px;
+            background: white;
+            border-radius: 50%;
+            color: red;
+            text-align: center;
+            line-height: 50px;
+            font-family: '微軟正黑體';
+            font-weight: bolder;
+            font-size: 1.5rem;
+            border: 5px solid black;
+        }
+
+        #close:hover {
+            background: rgb(187, 187, 187);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="start-page">
+        <a href="#" id="start"><img src="./images/game_start.png" alt="" width="300"></a>
+        <a href="#" id="rule"><img src="./images/game_rule.png" alt="" width="300"></a>
+    </div>
+    <div id="rule-page" class="display">
+        <div id="close">X</div>
+    </div>
+    <div id="content">
+        <div id="header">
+            <span>
+                目前血量：<span id="hp">100</span> &nbsp;
+                還剩：<span id="coutndown">30</span> 秒 &nbsp;
+                分數：<span id="score">0</span>
+            </span>
+        </div>
+
+        <div id="main">
+            <div id="table">
+                <table align="center" style="border: 5px solid black;">
+                    <tr>
+                        <td class="ninjas" id="hole7"></td>
+                        <td class="ninjas" id="hole8"></td>
+                        <td class="ninjas" id="hole9"></td>
+                    </tr>
+                    <tr>
+                        <td class="ninjas" id="hole4"></td>
+                        <td class="ninjas" id="hole5"></td>
+                        <td class="ninjas" id="hole6"></td>
+                    </tr>
+                    <tr>
+                        <td class="ninjas" id="hole1"></td>
+                        <td class="ninjas" id="hole2"></td>
+                        <td class="ninjas" id="hole3"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="footer">
+        </div>
+    </div>
+    <script>
+        const ninjas = document.getElementsByClassName('ninjas')
+        const hp = document.getElementById('hp')
+        const countdown = document.getElementById('coutndown')
+        const table = document.getElementById('table')
+        const clear = document.getElementById('clear')
+        const score = document.getElementById('score')
+        const start = document.getElementById('start')
+        const start_page = document.getElementById('start-page')
+        const rule = document.getElementById('rule')
+        const rule_page = document.getElementById('rule-page')
+        const close1 = document.getElementById('close')
+
+
+        let timer = 0
+        let timer_2 = 0
+        let sec = 30
+
+        close1.onclick = () => {
+            rule_page.classList.add('display')
+        }
+
+        rule.onclick = () => {
+            rule_page.classList.remove('display')
+        }
+
+        start.onclick = () => {
+            timer = setInterval(game, 1000)
+            start_page.classList.add('display')
+            let time = setInterval(() => {
+                sec--
+                countdown.innerText = sec
+                if (sec <= 0 && score.innerText >= 40) {
+                    clearInterval(time)
+                    clearInterval(timer)
+                    for (let ninja of ninjas) {
+                        ninja.classList.remove('enemy')
+                        ninja.classList.remove('ghost')
+                        ninja.classList.remove('princess')
+                        ninja.classList.remove('ghost-2')
+                    }
+                    table.insertAdjacentHTML('beforeend', '<img id="clear" src="./images/ninja_man_face4_laugh_2.png">')
+                } else if ((sec <= 0 && score.innerText < 40) || hp.innerText <= 0) {
+                    clearInterval(time)
+                    clearInterval(timer)
+                    for (let ninja of ninjas) {
+                        ninja.classList.remove('enemy')
+                        ninja.classList.remove('ghost')
+                        ninja.classList.remove('princess')
+                        ninja.classList.remove('ghost-2')
+                        table.insertAdjacentHTML('beforeend', '<img id="fail" src="./images/ninja_man_face3_sad_2.png">')
+                    }
+                    hp.innerText = 0
+                }
+            }, 1000)
+        }
+
+        const game = () => {
+            for (let ninja of ninjas) {
+                ninja.classList.remove('enemy')
+                ninja.classList.remove('ghost')
+                ninja.classList.remove('princess')
+                ninja.classList.remove('ghost-2')
+            }
+
+            for (let i = 0; i < 3; i++) {
+                const random = Math.floor(Math.random() * 9)
+                ninjas[random].classList.add('enemy')
+            }
+
+            const random = Math.floor(Math.random() * 9)
+            ninjas[random].classList.add('princess')
+        }
+
+        // 點擊事件
+        for (let ninja of ninjas) {
+            ninja.onclick = (event) => {
+                const target = event.target;
+                if (target.classList.contains("enemy")) {
+                    target.classList.replace("enemy", "ghost")
+                    score.innerText++
+                } else if (target.classList.contains("princess")) {
+                    target.classList.add("ghost-2");
+                    target.classList.remove("princess");
+                    hp.innerText = hp.innerText - 10
+                    score.innerText--
+                } else {
+                    hp.innerText = hp.innerText - 5
+                    console.log(hp)
+                }
+            }
+        }
+
+        document.onkeydown = (event) => {
+            const key = event.key
+            if (!isNaN(event.key) && event.code.includes('Numpad')) {
+                console.log(event.key);
+                const target = document.getElementById(`hole${event.key}`)
+                if (target != null && target.classList.contains('enemy')) {
+                    target.classList.replace('enemy', 'ghost')
+                    score.innerText++
+                } else if (target != null && target.classList.contains("princess")) {
+                    target.classList.add("ghost-2");
+                    target.classList.remove("princess");
+                    hp.innerText = hp.innerText - 10
+                    score.innerText--
+                } else {
+                    hp.innerText = hp.innerText - 5
+                    console.log(hp)
+                }
+            }
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
